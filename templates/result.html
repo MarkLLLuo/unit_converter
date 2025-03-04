@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+<!-- Title -->
+{% block webTitle %}Conversion Result{% endblock%} {% block navLink %}<a
+    href="{{href}}"
+    id="backLink"
+    >Back</a
+>{% endblock%} {% block content %}
+
+<div class="result-box">
+    <h3 class="result-box-heading">Result of your calculation</h3>
+    <h3 class="result-box-content">
+        <div>{{value}} <sub>({{unitFrom}})</sub></div>
+        <div>➡️</div>
+        <div>
+            {{convertedValue}}
+            <sub>({{unitTo}})</sub>
+        </div>
+    </h3>
+    <a href="{{href}}">Return</a>
+</div>
+{% endblock %}
