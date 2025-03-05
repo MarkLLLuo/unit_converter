@@ -6,22 +6,28 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 lengthUnits = {
-    "mm": 0.01,
-    "cm": 0.1,
+    "mm": 0.001,
+    "cm": 0.01,
     "m": 1,
-    "in.": 0.025,
-    "ft": 0.3,
-    "yd": 0.91,
-    "mi": 1609.34,
+    "km": 1000,
+    "in.": 0.0254,
+    "ft": 0.3048,
+    "yd": 0.9144,
+    "mi": 1609.344,
 }
 
-weightUnits = {"mg": 0.001, "g": 1, "kg": 1000, "oz": 28.35, "lb": 453.59}
+weightUnits = {"mg": 0.001, "g": 1, "kg": 1000, "oz": 28.3495, "lb": 453.5924}
 
 temperatureUnits = {"°C": 274.15, "°F": 255.927778, "K": 1}
 
 
-def convertValue(num: float, unitFrom: str, unitTo: str) -> int:
-    return 0
+def convertValue(num: float, unitFrom: str, unitTo: str) -> float:
+    if unitFrom in lengthUnits.keys():
+        return num * lengthUnits[unitFrom] / lengthUnits[unitTo]
+    elif unitFrom in weightUnits.keys():
+        return num * weightUnits[unitFrom] / weightUnits[unitTo]
+    else:
+        return num * temperatureUnits[unitFrom] / temperatureUnits[unitTo]
 
 
 app = FastAPI()
@@ -67,34 +73,22 @@ async def temperaturePage(request: Request):
 
 
 @app.post("/length", response_class=HTMLResponse)
+@app.post("/weight", response_class=HTMLResponse)
+@app.post("/temperature", response_class=HTMLResponse)
 async def convertLength(request: Request, data: Annotated[FormData, Form()]):
     convertedValue = convertValue(data.value, data.unitFrom, data.unitTo)
+    if data.unitFrom in lengthUnits:
+        href = "/length"
+    elif data.unitFrom in weightUnits:
+        href = "/weight"
+    else:
+        href = "/temperature"
     return templates.TemplateResponse(
         request,
         "result.html",
         {
             **data.model_dump(),
             "convertedValue": convertedValue,
-            "href": "/length",
+            "href": href,
         },
-    )
-
-
-@app.post("/weight", response_class=HTMLResponse)
-async def convertWeight(request: Request, data: Annotated[FormData, Form()]):
-    convertedValue = convertValue(data.value, data.unitFrom, data.unitTo)
-    return templates.TemplateResponse(
-        request,
-        "result.html",
-        {**data.model_dump(), "convertedValue": convertedValue, "href": "/weight"},
-    )
-
-
-@app.post("/temperature", response_class=HTMLResponse)
-async def convertTemperature(request: Request, data: Annotated[FormData, Form()]):
-    convertedValue = convertValue(data.value, data.unitFrom, data.unitTo)
-    return templates.TemplateResponse(
-        request,
-        "result.html",
-        {**data.model_dump(), "convertedValue": convertedValue, "href": "/temperature"},
     )

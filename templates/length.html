@@ -1,21 +1,32 @@
 {% extends "layout.html" %} {% block title %}Unit Converter - Length{%
 endblock %} {% block content %}
 <form action="/length" method="post">
-  <input type="number" name="value" id="len_input" />
-  <select name="unitFrom" id="unit_from">
-    {% for unit in units%} {% if unit == "m"%}
-    <option value="{{unit}}" selected>{{unit}}</option>
-    {% endif %}
-    <option value="{{unit}}">{{unit}}</option>
-    {% endfor %}
+  <div>
+    <label for="len_input">Enter the length to convert</label>
+    <input type="number" name="value" id="len_input" />
+  </div>
+  <div>
+    <label for="unit_from">Unit to Convert from</label>
+    <select name="unitFrom" id="unit_from">
+      {% for unit in units%} {% if unit == "m" %}
+        <option value="{{unit}}" selected>{{unit}}</option>
+      {% else %}
+        <option value="{{unit}}">{{unit}}</option>
+      {% endif %}
+      {% endfor %}
+  </div>
   </select>
-  <select name="unitTo" id="unit_to">
-    {% for unit in units%} {% if unit == "km"%}
-    <option value="{{unit}}" selected>{{unit}}</option>
-    {% endif %}
-    <option value="{{unit}}">{{unit}}</option>
-    {% endfor %}
-  </select>
+  <div>
+    <label for="unit_to">Unit to Convert to</label>
+    <select name="unitTo" id="unit_to">
+      {% for unit in units%} {% if unit == "km"%}
+      <option value="{{unit}}" selected>{{unit}}</option>
+      {% else %}
+      <option value="{{unit}}">{{unit}}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+  </div>
   <button type="submit">CONVERT</button>
 </form>
 {% endblock %}

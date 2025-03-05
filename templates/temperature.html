@@ -1,23 +1,34 @@
 {% extends "layout.html" %} {% block title %}Unit Converter -
 Temperature{% endblock %} {% block content %}
 <form action="/temperature" method="post">
-  <input type="number" name="value" id="temp_input" />
-  <select name="unitFrom" id="unit_from">
-    {% for unit in units%}
-      {% if unit == "c"%}
-      <option value="{{unit}}" selected>{{unit}}</option>
-      {% endif %}
-    <option value="{{unit}}">{{unit}}</option>
-    {% endfor %}
-  </select>
-  <select name="unitTo" id="unit_to">
-    {% for unit in units%}
-      {% if unit == "f"%}
-      <option value="{{unit}}" selected>{{unit}}</option>
-      {% endif %}
-    <option value="{{unit}}">{{unit}}</option>
-    {% endfor %}
-  </select>
+  <div>
+    <label for="temp_input">Enter the temperature to convert</label>
+    <input type="number" name="value" id="temp_input" />
+  </div>
+  <div>
+    <label for="unit_from">Unit to Convert from</label>
+    <select name="unitFrom" id="unit_from">
+      {% for unit in units%}
+        {% if unit == "°C"%}
+          <option value="{{unit}}" selected>{{unit}}</option>
+        {% else %}
+          <option value="{{unit}}">{{unit}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="unit_to">Unit to Convert to</label>
+    <select name="unitTo" id="unit_to">
+      {% for unit in units%}
+        {% if unit == "K"%}
+        <option value="{{unit}}" selected>{{unit}}</option>
+        {% else %}
+        <option value="{{unit}}">{{unit}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
   <button type="submit">CONVERT</button>
 </form>
 {% endblock %}
